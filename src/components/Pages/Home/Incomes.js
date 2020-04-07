@@ -1,9 +1,11 @@
-import React from "react";
+import React from 'react';
 
-class Incomes extends React.Component {
-  render() {
-    return <div>Incomes</div>;
-  }
-}
+const Incomes = () => {
+  return (
+    <div>
+      <p>Incomes</p>
+    </div>
+  );
+};
 
 export default Incomes;
