@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   TabContent,
   TabPane,
@@ -7,11 +7,12 @@ import {
   NavLink,
   Row,
   Col,
-} from "reactstrap";
-import classnames from "classnames";
+} from 'reactstrap';
+import classnames from 'classnames';
+import Charges from './Charges';
 
 const Home = (props) => {
-  const [activeTab, setActiveTab] = useState("1");
+  const [activeTab, setActiveTab] = useState('1');
 
   const toggle = (tab) => {
     if (activeTab !== tab) setActiveTab(tab);
@@ -22,9 +23,9 @@ const Home = (props) => {
       <Nav tabs>
         <NavItem>
           <NavLink
-            className={classnames({ active: activeTab === "1" })}
+            className={classnames({ active: activeTab === '1' })}
             onClick={() => {
-              toggle("1");
+              toggle('1');
             }}
           >
             Charges
@@ -33,9 +34,9 @@ const Home = (props) => {
 
         <NavItem>
           <NavLink
-            className={classnames({ active: activeTab === "2" })}
+            className={classnames({ active: activeTab === '2' })}
             onClick={() => {
-              toggle("2");
+              toggle('2');
             }}
           >
             Incomes
@@ -47,7 +48,7 @@ const Home = (props) => {
         <TabPane tabId="1">
           <Row>
             <Col sm="12">
-              <h4>Charges Contents</h4>
+              <Charges />
             </Col>
           </Row>
         </TabPane>
