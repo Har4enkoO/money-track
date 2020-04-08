@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 class Categories extends React.Component {
   state = {
@@ -12,7 +13,7 @@ class Categories extends React.Component {
       <div className="container">
         <div className="categories-header d-flex justify-content-between">
           <h2>Categories</h2>
-          <button>Add category</button>
+          <Link to="/add_category">Add category</Link>
         </div>
         <div className="table">
           <div className="row">
@@ -22,7 +23,7 @@ class Categories extends React.Component {
             <div className="col-3 text-center">Action</div>
           </div>
           {this.state.categories.map((category) => (
-            <div className="row">
+            <div className="row" key={category.categoryName}>
               <div className="col-3 text-center">{category.categoryName}</div>
               <div className="col-3 text-center">{category.description}</div>
               <div className="col-3 text-center">{category.date}</div>
