@@ -3,12 +3,6 @@ import React, { Component } from 'react';
 
 
 class Header extends Component {
-  constructor(){
-    super();
-    this.state={
-      balance:''
-    }
-  }
   componentDidMount(){
     localStorage.setItem('balance',3000);
   }
@@ -24,5 +18,5 @@ class Header extends Component {
 }
  }
 
- 
+
 export default Header;
