@@ -5,7 +5,15 @@ class AddCategory extends React.Component {
   render() {
     return (
       <div className="container">
-        <Form style={{ width: "60%", marginTop: "50px" }}>
+        <Form
+          style={{
+            width: "60%",
+            marginTop: "50px",
+            border: "1px solid lightgrey",
+            padding: "30px",
+            borderRadius: "4px",
+          }}
+        >
           <FormGroup>
             <Label for="total">Total</Label>
             <Input type="text" name="total" id="total" placeholder="total" />
