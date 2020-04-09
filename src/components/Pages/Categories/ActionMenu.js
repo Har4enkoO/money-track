@@ -9,10 +9,8 @@ import {
 export default function ActionMenu() {
   return (
     <UncontrolledDropdown>
-      <DropdownToggle
-        style={{ background: "none", color: "black", border: "none" }}
-      >
-        ***
+      <DropdownToggle style={{ background: "none", color: "grey" }}>
+        Edit
       </DropdownToggle>
       <DropdownMenu>
         <DropdownItem>Delete category</DropdownItem>

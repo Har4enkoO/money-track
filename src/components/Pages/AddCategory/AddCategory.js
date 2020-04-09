@@ -1,5 +1,6 @@
 import React from "react";
-import { Button, Form, FormGroup, Label, Input } from "reactstrap";
+import { Form, FormGroup, Label, Input } from "reactstrap";
+import { Link } from "react-router-dom";
 
 class AddCategory extends React.Component {
   render() {
@@ -39,7 +40,9 @@ class AddCategory extends React.Component {
               <option>5</option>
             </Input>
           </FormGroup>
-          <Button>Add new category</Button>
+          <Link to="/categories" className="btn btn-secondary">
+            Add new category
+          </Link>
         </Form>
       </div>
     );
