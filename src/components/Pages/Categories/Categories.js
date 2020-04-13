@@ -2,12 +2,26 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 import ActionMenu from './ActionMenu';
-import { load } from '../../../helpers/localStore.js'
 
 class Categories extends React.Component {
+  state = {
+    categories: JSON.parse(localStorage.getItem('categories')),
+  };
+  handleRemove = (id) => {
+    this.filteredArrey = this.state.categories.filter(
+      (el) => el.categoryName !== id
+    );
+    this.setState(() => {
+      return {
+        categories: this.filteredArrey,
+      };
+    });
+    localStorage.setItem('categories', JSON.stringify(this.state.categories));
+  };
   render() {
     return (
       <div className="container">
+        {console.log(this.state.categories)}
         <div className="categories-header d-flex justify-content-between mt-4">
           <h2>Categories</h2>
           <Link to="/add_category" className="btn btn-primary">
@@ -27,17 +41,25 @@ class Categories extends React.Component {
             <div className="col-3 text-center">Date</div>
             <div className="col-3 text-center">Action</div>
           </div>
-          { load('categories') ? 
-            [load('categories')].map((category) => (
-              <div className="row mt-2" key={category.categoryName}>
-                <div className="col-3 text-center">{category.categoryName}</div>
-                <div className="col-3 text-center">{category.description}</div>
-                <div className="col-3 text-center">{category.date}</div>
-                <div className="col-3 text-center">
-                  <ActionMenu />
+          {this.state.categories
+            ? this.state.categories.map((category) => (
+                <div className="row mt-2" key={category.categoryName}>
+                  <div className="col-3 text-center">
+                    {category.categoryName}
+                  </div>
+                  <div className="col-3 text-center">
+                    {category.description}
+                  </div>
+                  <div className="col-3 text-center">{category.date}</div>
+                  <div className="col-3 text-center">
+                    <ActionMenu
+                      handleRemove={this.handleRemove}
+                      id={category.categoryName}
+                    />
+                  </div>
                 </div>
-              </div>
-            )) : null}
+              ))
+            : null}
         </div>
       </div>
     );

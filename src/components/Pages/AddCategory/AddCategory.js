@@ -3,30 +3,47 @@ import { Form, FormGroup, Label, Input } from 'reactstrap';
 import { Link } from 'react-router-dom';
 
 class AddCategory extends React.Component {
-  state = {};
+  state = {
+    category: {
+      categoryName: '',
+      description: '',
+      icon: '',
+      date: '',
+    },
+  };
 
   addCategoryName = (e) => {
     this.setState({
+      category: {
         categoryName: e.target.value,
+      },
     });
   };
 
   addDescription = (e) => {
     this.setState({
+      category: {
         description: e.target.value,
+      },
     });
   };
   addIcon = (e) => {
+    const now = new Date();
     this.setState({
+      category: {
         icon: e.target.value,
-        date: Date.now(),
+        date: now.toLocaleDateString(),
+      },
     });
   };
 
-  render() {
-    let categories = localStorage.getItem('categories') || [];
-    let newArr = [...categories, this.state];
+  pushCategories = () => {
+    let categories = JSON.parse(localStorage.getItem('categories')) || [];
+    let newCategories = [...categories, this.state.category];
+    localStorage.setItem('categories', JSON.stringify(newCategories));
+  };
 
+  render() {
     return (
       <div className="container">
         <Form
@@ -78,7 +95,11 @@ class AddCategory extends React.Component {
               <option value="5">5</option>
             </Input>
           </FormGroup>
-          <Link to="/categories" className="btn btn-secondary" onClick={localStorage.setItem('categories', newArr)}>
+          <Link
+            to="/categories"
+            className="btn btn-secondary"
+            onClick={this.pushCategories}
+          >
             Add new category
           </Link>
         </Form>
