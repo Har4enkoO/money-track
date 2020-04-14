@@ -9,14 +9,14 @@ function ChargesByPeriodChart(props){
 
  		//const canvas = canvasRef.current
         //const ctx = canvas.getContext('2d');
- 		const ctx = document.getElementById('chargesChart').getContext('2d');
+ 		const ctx = document.getElementById('incomeChart').getContext('2d');
 
         const myChart = new Chart(ctx, {
-            type: 'doughnut',
+            type: 'bar',
             data: {
                 labels: props.xLabels,
                 datasets: [{
-                    label: 'top charges by category',
+                    label: 'top incomes',
                     data: props.yLabels,
                     backgroundColor: ['rgba(255,255,0,0.6)','rgb(255,160,122)','rgb(0,128,0)','rgb(255,69,0)'],
                     borderColor: 'rgba(30, 144, 255, 1)',
@@ -36,7 +36,7 @@ function ChargesByPeriodChart(props){
 	//*/
 
   return(
-    		<canvas id="chargesChart" width="100" height="50">
+    		<canvas id="incomeChart" width="100" height="50">
     		</canvas>
 
   ) 

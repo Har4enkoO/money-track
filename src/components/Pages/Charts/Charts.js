@@ -3,7 +3,9 @@ import Chart from "chart.js";
 
 
 import ChargesByPeriodChart from "./ChargesChartByPeriod";
-import TopChargesChart from "./TopChargesChart"
+import TopChargesChart from "./TopChargesChart";
+
+import TopIncomesChart from "./TopIncomesChart";
 
 /*
 1) Графік витрат за тиждень / місяць (див.дизайн, є фільтр)
@@ -34,6 +36,90 @@ const groupBy = (objectArray, property) => {
         return total;
     }, {});
 } 
+
+
+const groupIncomes = (objectArray, property) => {
+    return objectArray.reduce(function (total, obj) {
+        let key = obj[property];
+        if (!total[key]) {
+            total[key] = [];
+        }
+        total[key].push(obj.incomeSum);
+        return total;
+    }, {});
+} 
+	
+	//incomes array
+	let incomes = [
+		{income:'My mom',incomeSum:100},
+		{income:'My mom',incomeSum:30},
+		{income:'Sell book',incomeSum:100},
+		{income:'Sell dog',incomeSum:50},
+		{income:'Sell pot',incomeSum:30},
+		{income:'Sell last shirt',incomeSum:30},
+		{income:'Sell kidney',incomeSum:1000},			
+	]
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+//chart 3
+	let groupedAndReduced = groupIncomes(incomes,'income');
+	//groupedAndReduced= groupedAndReduced.map((el)=> console.log(el))
+	
+	let reducedInc = reduceIncomes(groupedAndReduced);
+
+	
+	//return first 3 incomes
+	let reducedSortedInc = reducedInc.sort((a,b)=>b.reducedIncome-a.reducedIncome).map((el,index)=>{
+		if(index>3)return;
+		return el
+	}).filter(el=>el!==undefined)
+
+	//console.log(reducedSortedInc)
+
+
+
+	//function that reduce incomes [ mymom: [100,30]],..] => [ mymom: [130]],..] 
+ 	function reduceIncomes(obj){
+		let newArr =[];
+		for (let prop in obj){
+			//console.log(prop )
+			let reducedIncome = obj[prop].reduce((a,b)=>a+b)		
+			newArr=[...newArr,{prop,reducedIncome}]
+		}
+		return newArr;
+	}
+
+
+	console.log(reducedSortedInc);
+
+	//form arrays for incomes chart
+	let xIncomes =[];
+	let yIncomes =[];
+
+	reducedSortedInc.forEach(el=>{
+		xIncomes.push(el.prop);
+		yIncomes.push(el.reducedIncome);
+	})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -230,7 +316,7 @@ const groupBy = (objectArray, property) => {
 	let categoriesDate =[];
 	let chargesDate =[]
 
-	console.log('category/charges',monthMnyCat);
+	//console.log('category/charges',monthMnyCat);
 
 	//mont
     monthMnyCat.reverse().forEach(el=>{
@@ -239,6 +325,64 @@ const groupBy = (objectArray, property) => {
     })
 
 
+    ///For week
+
+	//get chargeCategories by dates
+	let chargeCategoriesWeek = [];
+
+	weekFilterDates.forEach((date)=>{
+		let filtered = charges.filter((el)=>el.date == date);
+		
+		for(let i=0;i<filtered.length; i++){
+			var { chargesSum, chargeCategory } = filtered[i];
+			
+			chargeCategoriesWeek = [...chargeCategoriesWeek, {chargesSum, chargeCategory}]
+			
+		}
+	})
+	;
+
+	//group by charges categories
+	let filtChrgCatWeek = groupBy(chargeCategoriesWeek, 'chargeCategory');
+
+	//reduce it
+	let normRedFiltChrgsCatWeek=[];
+	//going trough object
+	for(let key in filtChrgCatWeek){
+
+		let chargesPerCategory = parseFloat(filtChrgCatWeek[key].slice().reduce( (a,b) =>a+b).toString());
+		normRedFiltChrgsCatWeek	= [...normRedFiltChrgsCatWeek, {category:`${key}`,chargesSum: `${ chargesPerCategory}`}]
+		
+	}
+	//sort mont categories from bigger to small
+	let redFiltChrgsCatWeek = normRedFiltChrgsCatWeek.sort((a,b)=>b.chargesSum-a.chargesSum)
+
+
+	//if charges money arr GT than 4
+	let weekMnyCat;
+	if(redFiltChrgsCatWeek.length>4){
+		weekMnyCat = redFiltChrgsCatWeek.slice(0, 4);
+	}else{
+		weekMnyCat = redFiltChrgsCatWeek
+	}
+
+	let categoriesDateWeek =[];
+	let chargesDateWeek =[]
+
+	//console.log('category/charges',weekMnyCat);
+/*
+	//month
+    weekMnyCat.reverse().forEach(el=>{
+    	categoriesDateWeek.push(el.category);
+    	chargesDateWeek.push(el.chargesSum);
+    })*/
+
+	const chartsStyle1 ={
+		height:'10%',
+		width:'70%',
+		marginBottom:'1rem'
+	
+	}
 
 
    	const chartsStyle = {
@@ -253,19 +397,17 @@ const groupBy = (objectArray, property) => {
     		<p>Summary <button>Month</button> <button>Week</button> <button>All time</button></p>
     	</div>
 
-    	<div >
+    	<div style={chartsStyle1}>
     		Charges by date
     		<ChargesByPeriodChart xLabels={xLbldateCharges} yLabels={yLbldateCharges}/>
     	</div>
 
     	<div>
     		<div style={chartsStyle}>
-    			<TopChargesChart xLabels={categoriesDate} yLabels={chargesDate}/>
+   				<TopIncomesChart xLabels={xIncomes} yLabels={yIncomes}/>
     		</div>
     		<div style={chartsStyle}>
-    			Charges categories
-    			<canvas id="incomeChart" width="200" height="400">
-    			</canvas>
+    			<TopChargesChart xLabels={categoriesDate} yLabels={chargesDate}/>
     		</div>
 
     	</div>

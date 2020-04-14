@@ -35,8 +35,14 @@ function ChargesByPeriodChart(props){
 /*
 	//*/
 
+    const chartsStyle = {
+        heigth:'250px ',
+        width: '300px'
+    }
+
+
   return(
-    		<canvas id="dateCharges" width="100" height="50">
+    		<canvas id="dateCharges" width="100" height="50" style={chartsStyle}>
     		</canvas>
 
   ) 
