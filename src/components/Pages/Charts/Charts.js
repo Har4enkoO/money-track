@@ -2,7 +2,8 @@ import React, { useEffect, useRef, Component} from "react";
 import Chart from "chart.js";
 
 
-import ChargesByPeriodChart from "./ChargesChartByPeriod"
+import ChargesByPeriodChart from "./ChargesChartByPeriod";
+import TopChargesChart from "./TopChargesChart"
 
 /*
 1) Графік витрат за тиждень / місяць (див.дизайн, є фільтр)
@@ -41,6 +42,7 @@ const groupBy = (objectArray, property) => {
 
     //data from storage
     let charges = [
+    	{date: '29.04.2020', chargesSum: 200, chargeCategory: 'trips'},	
     	{date: '28.03.2020', chargesSum: 100, chargeCategory: 'car rent'},
 		{date: '27.04.2020', chargesSum: 100, chargeCategory: 'car rent'},
 		{date: '21.04.2020', chargesSum: 100, chargeCategory: 'restraunt'},
@@ -49,10 +51,11 @@ const groupBy = (objectArray, property) => {
 		{date: '27.03.2020', chargesSum: 300, chargeCategory: 'car rent'},
 		{date: '21.03.2020', chargesSum: 270, chargeCategory: 'food'},
 		{date: '20.03.2020', chargesSum: 150, chargeCategory: 'restraunt'},
+		{date: '20.03.2020', chargesSum: 150, chargeCategory: 'food'},
 		{date: '27.04.2020', chargesSum: 100, chargeCategory: 'food'},
 		{date: '27.04.2020', chargesSum: 100, chargeCategory: 'clothes'},
 		{date: '07.03.2020', chargesSum: 50, chargeCategory: 'food'},
-		{date: '01.05.2020', chargesSum: 250.35, chargeCategory: 'food'},
+		{date: '30.04.2020', chargesSum: 250.35, chargeCategory: 'food'},
 	]
 	//here will be set of chargeCategories
 	let setChargesCategories=[];
@@ -61,7 +64,7 @@ const groupBy = (objectArray, property) => {
 	//return {  27.04.2019:[]}
 	let chargesByDates = groupBy(charges, 'date');
 	
-	console.log('chargesByDates', chargesByDates);
+	//console.log('chargesByDates', chargesByDates);
 	
 	let normalizedCharges = [];
 
@@ -71,16 +74,18 @@ const groupBy = (objectArray, property) => {
 		let chargesPerDate = parseFloat(chargesByDates[key].slice().reduce( (a,b) =>a+b).toString());
 		normalizedCharges=[...normalizedCharges, {date:`${key}`, chargesSum:`${ chargesPerDate}`}]
 	}
-	console.log('normalizedCharges',normalizedCharges);
+	//console.log('normalizedCharges',normalizedCharges);
 	//console.log(setChargesCategories);
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//convert date to Date obj for sort
 	normalizedCharges = normalizedCharges.map( ent =>{
-		
-		setChargesCategories.push(ent.chargeCategory);
+
 		return { date: new Date(ent.date.split('.').reverse().join('-')), chargesSum: ent.chargesSum, dateN: ent.date}
 	})
+
+		//convert all chargesCategories to Set have no clue why i need it
+	//setChargesCategories= new Set(setChargesCategories);
 
 
 	//console.log(setChargesCategories);
@@ -129,6 +134,7 @@ const groupBy = (objectArray, property) => {
 		}
 
 	})
+
 	//array with dates/charges from last month 
 	let monthArray =  sortedCharges.filter( function(element){
 
@@ -146,15 +152,11 @@ const groupBy = (objectArray, property) => {
 	//console.log('aminusWeek',minusWeek);
 	//console.log('aminusMonth',minusMonth);
 	
-	console.log('all',sortedCharges);
-	console.log('month',weekArray);
-	console.log('month',monthArray);
-	
+	//console.log('all',sortedCharges);
+	//console.log('week',weekArray);
+	//console.log('month',monthArray);
 
-
-
-
-
+	//TODO
 	///////////////////////////////////////////////////////////////////////////////////////////
 	//form x and y plot points for first charts
     sortedCharges.forEach(el=>{
@@ -165,8 +167,76 @@ const groupBy = (objectArray, property) => {
 
 
 
-	//convert all chargesCategories to Set have no clue why i need it
-	setChargesCategories= new Set(setChargesCategories);
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//for 2 chart
+	//arr with week dates
+	let weekFilterDates =[];
+
+	//arr with month dates
+	let monthFilterDates =[];
+
+
+	//creates arr with mont and week dates
+	weekArray.forEach((el)=>{
+		weekFilterDates.push(el.dateN)
+	})
+	monthArray.forEach((el)=>{
+		monthFilterDates.push(el.dateN)
+	})
+
+
+	///For month
+
+	//get chargeCategories by dates
+	let chargeCategoriesMonth = [];
+
+	monthFilterDates.forEach((date)=>{
+		let filtered = charges.filter((el)=>el.date == date);
+		
+		for(let i=0;i<filtered.length; i++){
+			var { chargesSum, chargeCategory } = filtered[i];
+			
+			chargeCategoriesMonth = [...chargeCategoriesMonth, {chargesSum, chargeCategory}]
+			
+		}
+	})
+	;
+
+	//console.log(chargeCategoriesMonth)
+	//group by charges categories
+	let filtChrgCatMonth = groupBy(chargeCategoriesMonth, 'chargeCategory');
+
+	//reduce it
+	let normRedFiltChrgsCatMont=[];
+	//going trough object
+	for(let key in filtChrgCatMonth){
+
+		let chargesPerCategory = parseFloat(filtChrgCatMonth[key].slice().reduce( (a,b) =>a+b).toString());
+		normRedFiltChrgsCatMont	= [...normRedFiltChrgsCatMont, {category:`${key}`,chargesSum: `${ chargesPerCategory}`}]
+		
+	}
+	//sort mont categories from bigger to small
+	let normRedFiltChrgsCatMonth = normRedFiltChrgsCatMont.sort((a,b)=>b.chargesSum-a.chargesSum)
+
+
+	//if charges money arr GT than 4
+	let monthMnyCat;
+	if(normRedFiltChrgsCatMonth.length>4){
+		monthMnyCat = normRedFiltChrgsCatMonth.slice(0, 4);
+	}else{
+		monthMnyCat = normRedFiltChrgsCatMonth
+	}
+
+	let categoriesDate =[];
+	let chargesDate =[]
+
+	console.log('category/charges',monthMnyCat);
+
+	//mont
+    monthMnyCat.reverse().forEach(el=>{
+    	categoriesDate.push(el.category);
+    	chargesDate.push(el.chargesSum);
+    })
 
 
 
@@ -190,13 +260,11 @@ const groupBy = (objectArray, property) => {
 
     	<div>
     		<div style={chartsStyle}>
-    			Income categories
-    			<canvas id="incomeChart" width="200" height="400">
-    			</canvas>
+    			<TopChargesChart xLabels={categoriesDate} yLabels={chargesDate}/>
     		</div>
     		<div style={chartsStyle}>
     			Charges categories
-    			<canvas id="chargesChart" width="200" height="400">
+    			<canvas id="incomeChart" width="200" height="400">
     			</canvas>
     		</div>
 
