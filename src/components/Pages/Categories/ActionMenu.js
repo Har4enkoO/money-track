@@ -1,19 +1,21 @@
-import React from "react";
+import React from 'react';
 import {
   UncontrolledDropdown,
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
-} from "reactstrap";
+} from 'reactstrap';
 
-export default function ActionMenu() {
+export default function ActionMenu({ handleRemove, id }) {
   return (
     <UncontrolledDropdown>
-      <DropdownToggle style={{ background: "none", color: "grey" }}>
+      <DropdownToggle style={{ background: 'none', color: 'grey' }}>
         Edit
       </DropdownToggle>
       <DropdownMenu>
-        <DropdownItem>Delete category</DropdownItem>
+        <DropdownItem onClick={() => handleRemove(id)}>
+          Delete category
+        </DropdownItem>
       </DropdownMenu>
     </UncontrolledDropdown>
   );
