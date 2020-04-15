@@ -11,26 +11,14 @@ class AddCategory extends React.Component {
       date: '',
     },
   };
-
-  addCategoryName = (e) => {
-    this.setState({
-      category: {
-        categoryName: e.target.value,
-      },
-    });
-  };
-
-  addDescription = (e) => {
-    this.setState({
-      category: {
-        description: e.target.value,
-      },
-    });
-  };
-  addIcon = (e) => {
+  addNewCategory = (e) => {
     const now = new Date();
+    let description = document.getElementById('description').value;
+    let total = document.getElementById('total').value;
     this.setState({
       category: {
+        categoryName: total,
+        description: description,
         icon: e.target.value,
         date: now.toLocaleDateString(),
       },
@@ -57,13 +45,7 @@ class AddCategory extends React.Component {
         >
           <FormGroup>
             <Label for="total">Total</Label>
-            <Input
-              type="text"
-              name="total"
-              id="total"
-              onChange={this.addCategoryName}
-              placeholder="total"
-            />
+            <Input type="text" name="total" id="total" placeholder="Category" />
           </FormGroup>
 
           <FormGroup>
@@ -72,8 +54,7 @@ class AddCategory extends React.Component {
               type="text"
               name="description"
               id="description"
-              onChange={this.addDescription}
-              placeholder="description"
+              placeholder="Description"
             />
           </FormGroup>
 
@@ -83,7 +64,7 @@ class AddCategory extends React.Component {
               type="select"
               name="selectIcon"
               id="selectIcon"
-              onChange={this.addIcon}
+              onChange={this.addNewCategory}
             >
               <option value="none" hidden="">
                 Chose icon

@@ -16,7 +16,8 @@ class Categories extends React.Component {
         categories: this.filteredArrey,
       };
     });
-    localStorage.setItem('categories', JSON.stringify(this.state.categories));
+    localStorage.removeItem('categories');
+    localStorage.setItem('categories', JSON.stringify(this.filteredArrey));
   };
   render() {
     return (
@@ -42,7 +43,7 @@ class Categories extends React.Component {
             <div className="col-3 text-center">Action</div>
           </div>
           {this.state.categories
-            ? this.state.categories.map((category) => (
+            ? this.state.categories.map((category) => (              
                 <div className="row mt-2" key={category.categoryName}>
                   <div className="col-3 text-center">
                     {category.categoryName}
